@@ -13,40 +13,58 @@ const ctx = canvas.getContext('2d')
 ctx.scale(DPR, DPR)
 
 
+// Define a complex number
+class ComplexNumber {
+    constructor(a, b) {
+        this.re = a
+        this.im = b
+        this.abs = 0
+    }
+
+    square() {
+        let real = this.re ** 2 - this.im ** 2
+        let imag = 2 * this.re * this.im
+        
+        this.re = real
+        this.im = imag
+    }
+
+    absolute() {
+        this.abs = (this.re ** 2 + this.im ** 2) ** 0.5
+    }
+
+    add(z) {
+        return new ComplexNumber(this.re + z.re, this.im + z.im)
+    }
+}
+
+
 // Define a point in the Complex Plane
 class ComplexPoint {
-    constructor(a, b) {
+    constructor(a, b, deltaX, deltaY) {
+        // Canvas coordinates
+        this.canvas = new ComplexNumber(a, b)
+
         // Coordinates of the point
-        this.coordA = a
-        this.coordB = b
+        this.coord = new ComplexNumber(
+            (a - deltaX) * scale,
+            -(b - deltaY) * scale
+        )
 
         // Cumulative result coordinates (for the generator function)
-        this.resultA = 0
-        this.resultB = 0
-        this.resultAbs = 0
+        this.result = new ComplexNumber(0, 0)
     }
 
-    squareComplex(a, b) {
-        let real = a ** 2 - b ** 2
-        let imag = 2 * a * b
-        return real, imag
-    }
-
-    absoluteComplex(a, b) {
-        return (a ** 2 + b ** 2) ** 0.5
-    }
-
-    // f(z) = z**2 + c
+    // f(z) = z ** 2 + c
     generatorFuntion() {
-        // Square z
-        this.resultA, this.resultB = this.squareComplex(this.resultA, this.resultB)
+        // z ** 2
+        this.result.square()
 
-        // Add c
-        this.resultA += this.coordA
-        this.resultB += this.coordB
+        // + c
+        this.result = this.coord.add(this.result)
 
-        // See the absolute value of the result, to color the canas
-        this.resultAbs = this.absoluteComplex(this.resultA, this.resultB)
+        // |f(z)|
+        this.result.absolute()
     }
 }
 
@@ -56,15 +74,13 @@ function start() {
     let width = canvas.width
     let height = canvas.height
 
-    let halfWidth = width / 2
-    let halfHeight = height / 2
+    let deltaX = width / 2
+    let deltaY = height / 2
 
     let allPoints = []
     for (let x=0; x < width; x++) {
         for (let y=0; y < height; y++) {
-            let xResult = (x - halfWidth) * scale
-            let yResult = (y - halfHeight) * scale
-            allPoints.push(new ComplexPoint(xResult, yResult))
+            allPoints.push(new ComplexPoint(x, y, deltaX, deltaY))
         }
     }
 
@@ -77,4 +93,6 @@ function iterate() {
 
 }
 
-function color()
+function color() {
+
+}
