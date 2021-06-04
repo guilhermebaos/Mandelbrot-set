@@ -1,0 +1,30 @@
+:root {
+    --lighter-blue: #abd6e7;
+    --light-blue: #56A1BF;
+    --blue: #0455BF;
+    --dark-blue: #033E8C;
+    --darker-blue: #022859;
+
+    --black-blue: #011526;
+}
+
+body {
+    background-color: var(--black-blue);
+    color: rgb(240, 240, 240);
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-size: 4em;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+
+.canvas-container {
+    width: fit-content;
+    margin: 20px auto;
+}
+canvas {
+    border: 1px solid black;
+}
