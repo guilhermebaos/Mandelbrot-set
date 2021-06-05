@@ -21,14 +21,21 @@ h1 {
 }
 
 
+canvas {
+    border: 1px solid black;
+}
 .canvas-container {
     width: fit-content;
     max-width: 100%;
-    overflow: auto;
-    margin: 20px auto;
+    max-height: 100%;
+    margin: auto;
+    padding: 0px;
 }
-canvas {
-    border: 1px solid black;
+.canvas-overflow {
+    overflow-x: auto;
+    width: 100%;
+    margin: 20px 0px;
+    padding: 0px;
 }
 
 button {
