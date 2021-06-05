@@ -1,7 +1,8 @@
 // Parameters
-const threshold = 2
-const scale = 0.04      // Multiply every points' coordinates by the scale factor
+const threshold = 2     // Limit above which we assume the point diverges
+const scale = 0.01      // Multiply every points' coordinates by the scale factor
 
+const animDelay = 0.25  // Animation delay for multiple iterations
 const allColors = [
     '#0000ff',
     '#00ff00',
@@ -84,8 +85,8 @@ function start() {
     let width = canvas.width
     let height = canvas.height
 
-    let deltaX = width / 2
-    let deltaY = height / 2
+    let deltaX = width / 2 - 60
+    let deltaY = height / 2 - 50
 
     let allPoints = []
     for (let x=0; x < width; x++) {
@@ -124,11 +125,21 @@ function colorPoints() {
     }
 
     currentColor++
+    currentColor %= allColors.length
 }
 
-function iterate(times) {
-    for (let i=0; i < times; i++) {
-        updatePoints()
-        colorPoints()
+function step() {
+    updatePoints()
+    colorPoints()
+}
+
+function iterate(times=0) {
+    if (times == 0) {
+        console.log('Done!')
     }
+
+    step()
+    setTimeout(() => {
+        iterate(times - 1)
+    }, animDelay)
 }
