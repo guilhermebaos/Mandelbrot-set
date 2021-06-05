@@ -1,5 +1,15 @@
 // Parameters
+const threshold = 2
 const scale = 0.04      // Multiply every points' coordinates by the scale factor
+
+const allColors = [
+    '#0000ff',
+    '#00ff00',
+    '#ff0000',
+    '#ffff00',
+    '#ff00ff',
+    '#00ffff',
+]
 
 
 // Get the Device Pixel Ratio
@@ -89,10 +99,36 @@ function start() {
 
 const points = start()
 
-function iterate() {
-
+let escapePoints = []
+function updatePoints() {
+    escapePoints = []
+    for (let p in points) {
+        let point = points[p]
+        if (point.result.abs < threshold) {
+            point.generatorFuntion()
+            if (point.result.abs > threshold) {
+                escapePoints.push(point)
+            }
+        }
+    }
 }
 
-function color() {
+let currentColor = 0
+function colorPoints() {
+    color = allColors[currentColor]
 
+    ctx.fillStyle = color
+    for (let p in escapePoints) {
+        let point = escapePoints[p]
+        ctx.fillRect(point.canvas.re, point.canvas.im, 1, 1)
+    }
+
+    currentColor++
+}
+
+function iterate(times) {
+    for (let i=0; i < times; i++) {
+        updatePoints()
+        colorPoints()
+    }
 }
