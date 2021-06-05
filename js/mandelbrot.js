@@ -2,9 +2,9 @@
 const threshold = 2     // Limit above which we assume the point diverges
 
 // Window size
-let scale = 0.0075      // Multiply every points' coordinates by the scale factor
-let translateX = -70
-let translateY = -70
+const initialScale = 0.0075    // Multiply every points' coordinates by the scale factor
+const initialTranslateX = -70
+const initialTranslateY = -70
 
 // Animation and color
 const animDelay = 0.25  // Animation delay for multiple iterations
@@ -20,6 +20,12 @@ const ctx = canvas.getContext('2d')
 
 // Fix the canvas
 ctx.scale(DPR, DPR)
+
+
+// Select the sliders
+const sliderTransX = document.getElementById('transX')
+const sliderTransY = document.getElementById('transY')
+const sliderScale = document.getElementById('zoom')
 
 
 // Define a complex number
@@ -147,12 +153,18 @@ function drawAxis(width, height, deltaX, deltaY) {
 
 
 // Select every point on the grid
-let points
+let points, scale, translateX, translateY
 function start() {
     let width = canvas.width
     let height = canvas.height
     
     ctx.clearRect(0, 0, width, height)
+
+    let zoom = (sliderScale.value * 1)
+    
+    scale = initialScale / zoom
+    translateX = (initialTranslateX + (sliderTransX.value * 1) * zoom)
+    translateY = (initialTranslateY + (sliderTransY.value * 1) * zoom)
 
     let deltaX = width / 2 + translateX
     let deltaY = height / 2 + translateY

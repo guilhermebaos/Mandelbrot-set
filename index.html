@@ -11,11 +11,19 @@
 </head>
 <body>
     <h1>Mandelbrot Set</h1>
-    <div class="canvas-container">
-        <canvas id="mandelbrot-canvas" width="700" height="700"></canvas>
-    </div>
+    <label for="transX">Translate in X direction: </label><input type="number" name="transX" id="transX" value="0"><br>
+    <label for="transX">Translate in Y direction: </label><input type="number" name="transY" id="transY" value="0"><br><br>
+    <label for="transX">Zoom: </label><input type="number" name="zoom" id="zoom" value="1"><br>
+
+    <button onclick="start()">Restart</button>
+
+
     <button onclick="iterate(1)">Do 1 Iteration</button>
     <button onclick="iterate(10)">Do 10 Iterations</button>
     <button onclick="iterate(100)">Do 100 Iterations</button>
+
+    <div class="canvas-container">
+        <canvas id="mandelbrot-canvas" width="700" height="700"></canvas>
+    </div>
 </body>
 </html>

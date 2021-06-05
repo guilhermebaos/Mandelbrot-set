@@ -23,8 +23,14 @@ h1 {
 
 .canvas-container {
     width: fit-content;
+    max-width: 100%;
+    overflow: auto;
     margin: 20px auto;
 }
 canvas {
     border: 1px solid black;
+}
+
+button {
+    margin-top: 20px;
 }
