@@ -2,9 +2,7 @@
 const threshold = 2     // Limit above which we assume the point diverges
 
 // Window size
-const initialScale = 0.0075    // Multiply every points' coordinates by the scale factor
-const initialTranslateX = -70
-const initialTranslateY = -70
+const initialScale = 0.006    // Multiply every points' coordinates by the scale factor
 
 // Animation and color
 const animDelay = 0.25  // Animation delay for multiple iterations
@@ -16,10 +14,9 @@ const DPR = window.devicePixelRatio
 
 // Get the canvas
 const canvas = document.getElementById('mandelbrot-canvas')
-const ctx = canvas.getContext('2d')
 
-// Fix the canvas
-ctx.scale(DPR, DPR)
+// Get the canvas context
+const ctx = canvas.getContext('2d')
 
 
 // Select the sliders
@@ -140,14 +137,19 @@ function drawArrow(x0, y0, xFinal, yFinal, color) {
 
 // Draw the real and imaginary axis
 function drawAxis(width, height, deltaX, deltaY) {
+
+    debugger
     let arrowHeadOffset = 20
 
+    // Real Axis
+    drawArrow(0, deltaY, width - arrowHeadOffset, deltaY, '#000000')
+
+    // Imaginary Axis
     drawArrow(deltaX, height, deltaX, 0 + arrowHeadOffset, '#000000')
-    drawArrow(0, deltaY, width - 160, deltaY, '#000000')
 
     ctx.fillStyle = '#fafafa'
-    ctx.fillText('Imaginary Axis', deltaX + 10, 5 + arrowHeadOffset)
-    ctx.fillText('Real Axis', width - 210, deltaY + 15)
+    ctx.fillText('Imaginary Axis', deltaX + arrowHeadOffset, arrowHeadOffset)
+    ctx.fillText('Real Axis', width - 3 * arrowHeadOffset, deltaY + arrowHeadOffset)
 }
 
 
@@ -163,8 +165,8 @@ function start() {
     let zoom = (sliderScale.value * 1)
     
     scale = initialScale / zoom
-    translateX = (initialTranslateX + (sliderTransX.value * 1) * zoom)
-    translateY = (initialTranslateY + (sliderTransY.value * 1) * zoom)
+    translateX = (sliderTransX.value * 1) * zoom
+    translateY = (sliderTransY.value * 1) * zoom
 
     let deltaX = width / 2 + translateX
     let deltaY = height / 2 + translateY
