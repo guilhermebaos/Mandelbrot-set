@@ -9,9 +9,6 @@ const animDelay = 0.25  // Animation delay for multiple iterations
 const colorStep = 6     // Speed at which the color changes
 
 
-// Get the Device Pixel Ratio
-const DPR = window.devicePixelRatio
-
 // Get the canvas
 const canvas = document.getElementById('mandelbrot-canvas')
 
@@ -148,8 +145,9 @@ function drawAxis(width, height, deltaX, deltaY) {
     drawArrow(deltaX, height, deltaX, 0 + arrowHeadOffset, '#000000')
 
     ctx.fillStyle = '#fafafa'
+    ctx.font = '20px serif'
     ctx.fillText('Imaginary Axis', deltaX + arrowHeadOffset, arrowHeadOffset)
-    ctx.fillText('Real Axis', width - 3 * arrowHeadOffset, deltaY + arrowHeadOffset)
+    ctx.fillText('Real Axis', width - 5 * arrowHeadOffset, deltaY + arrowHeadOffset)
 }
 
 
