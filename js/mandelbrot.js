@@ -5,7 +5,7 @@ const threshold = 2     // Limit above which we assume the point diverges
 const initialScale = 0.006    // Multiply every points' coordinates by the scale factor
 
 // Animation and color
-const animDelay = 0.25  // Animation delay for multiple iterations
+const animDelay = 1  // Animation delay for multiple iterations
 const colorStep = 6     // Speed at which the color changes
 
 
@@ -134,8 +134,6 @@ function drawArrow(x0, y0, xFinal, yFinal, color) {
 
 // Draw the real and imaginary axis
 function drawAxis(width, height, deltaX, deltaY) {
-
-    debugger
     let arrowHeadOffset = 20
 
     // Real Axis
