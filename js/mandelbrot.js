@@ -2,6 +2,9 @@
 const threshold = 2     // Limit above which we assume the point diverges
 const scale = 0.01      // Multiply every points' coordinates by the scale factor
 
+const translateX = -60
+const translateY = 50
+
 const animDelay = 0.25  // Animation delay for multiple iterations
 const allColors = [
     '#0000ff',
@@ -151,8 +154,8 @@ function start() {
     let width = canvas.width
     let height = canvas.height
 
-    let deltaX = width / 2 - 60
-    let deltaY = height / 2 - 50
+    let deltaX = width / 2 + translateX
+    let deltaY = height / 2 - translateY
 
     drawAxis(width, height, deltaX, deltaY)
 
