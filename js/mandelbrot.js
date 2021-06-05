@@ -80,6 +80,72 @@ class ComplexPoint {
 }
 
 
+// Draw an arrow
+function drawArrow(x0, y0, xFinal, yFinal, color) {
+    // Arrow parameters
+    let bodyWidth = 4
+    let headHeight = 10
+
+    ctx.strokeStyle = color
+    ctx.fillStyle = color
+
+    // The end of the arrow is in the right position
+    if (xFinal == x0) {
+        xFinal += 0
+    } else if (xFinal > x0) {
+        xFinal += headHeight + 1
+    } else {
+        xFinal -= headHeight + 1
+    }
+
+    if (yFinal == y0) {
+        yFinal += 0
+    } else if (yFinal > y0) {
+        yFinal += headHeight + 1
+    } else {
+        yFinal -= headHeight + 1
+    }
+
+    let angle = Math.atan2(yFinal - y0, xFinal - x0)
+
+    // Arrow Body
+    ctx.beginPath()
+    ctx.moveTo(x0, y0)
+    ctx.lineTo(xFinal, yFinal)
+    ctx.lineWidth = bodyWidth
+    ctx.stroke()
+    
+    // One side of the arrow head
+    ctx.beginPath()
+    ctx.moveTo(xFinal, yFinal)
+    ctx.lineTo(xFinal - headHeight * Math.cos(angle - Math.PI/7), yFinal - headHeight * Math.sin(angle - Math.PI/7))
+    
+    // Other side
+    ctx.lineTo(xFinal - headHeight * Math.cos(angle + Math.PI/7), yFinal - headHeight * Math.sin(angle + Math.PI/7))
+    
+    // From one side to the center and then to the other side of the arrow head
+    ctx.lineTo(xFinal, yFinal)
+    ctx.lineTo(xFinal - headHeight * Math.cos(angle - Math.PI/7), yFinal - headHeight * Math.sin(angle - Math.PI/7))
+
+    // Stroke the paths
+    ctx.lineWidth = bodyWidth
+    ctx.stroke()
+    ctx.fill()
+}
+
+
+// Draw the real and imaginary axis
+function drawAxis(width, height, deltaX, deltaY) {
+    let arrowHeadOffset = 20
+
+    drawArrow(deltaX, height, deltaX, 0 + arrowHeadOffset, '#ffffff')
+    drawArrow(0, deltaY, width - 160, deltaY, '#ffffff')
+
+    ctx.fillText('Imaginary Axis', deltaX + 10, 5 + arrowHeadOffset)
+    ctx.fillText('Real Axis', width - 210, deltaY + 15)
+}
+
+
 // Select every point on the grid
 function start() {
     let width = canvas.width
@@ -87,6 +153,8 @@ function start() {
 
     let deltaX = width / 2 - 60
     let deltaY = height / 2 - 50
+
+    drawAxis(width, height, deltaX, deltaY)
 
     let allPoints = []
     for (let x=0; x < width; x++) {
@@ -134,8 +202,9 @@ function step() {
 }
 
 function iterate(times=0) {
-    if (times == 0) {
+    if (times <= 0) {
         console.log('Done!')
+        return
     }
 
     step()
