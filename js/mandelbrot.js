@@ -2,13 +2,13 @@
 const threshold = 2     // Limit above which we assume the point diverges
 
 // Window size
-const scale = 0.0075    // Multiply every points' coordinates by the scale factor
-const translateX = -70
-const translateY = -70
+let scale = 0.0075      // Multiply every points' coordinates by the scale factor
+let translateX = -70
+let translateY = -70
 
 // Animation and color
 const animDelay = 0.25  // Animation delay for multiple iterations
-const colorStep = 8    // Speed at which the color changes
+const colorStep = 6     // Speed at which the color changes
 
 
 // Get the Device Pixel Ratio
@@ -145,10 +145,14 @@ function drawAxis(width, height, deltaX, deltaY) {
 }
 
 
+
 // Select every point on the grid
+let points
 function start() {
     let width = canvas.width
     let height = canvas.height
+    
+    ctx.clearRect(0, 0, width, height)
 
     let deltaX = width / 2 + translateX
     let deltaY = height / 2 + translateY
@@ -162,12 +166,11 @@ function start() {
         }
     }
 
-    return allPoints
+    points = allPoints
 }
 
-const points = start()
-
-let escapePoints = []
+// All points that will diverge instead of converge
+let escapePoints
 function updatePoints() {
     escapePoints = []
     for (let p in points) {
@@ -181,10 +184,11 @@ function updatePoints() {
     }
 }
 
+// Color the points according to the parameters and how fast they diverge
 let currentColor = [0, 0]
 let currentDirection = [1, 1]
 function colorPoints() {
-    color = `rgb(${currentColor[0]}, ${currentColor[1]}, 256)`
+    color = `rgb(${currentColor[0]}, ${currentColor[1]}, 255)`
 
     ctx.fillStyle = color
     for (let p in escapePoints) {
@@ -192,33 +196,40 @@ function colorPoints() {
         ctx.fillRect(point.canvas.re, point.canvas.im, 1, 1)
     }
 
-    currentColor[1] += colorStep * currentDirection[0]
-    currentColor[0] += Math.ceil(colorStep * Math.PI / 4) * currentDirection[1]
+    currentColor[0] += colorStep * currentDirection[0]
+    currentColor[1] += Math.ceil(colorStep * Math.PI / 4) * currentDirection[1]
 
 
     // Switch the direction in which we add color
-    if (currentColor[1] + colorStep > 255) {
-        currentDirection[1] = -1
-    }
     if (currentColor[0] + colorStep > 255) {
+        currentDirection[0] = -1
+    }
+    if (currentColor[1] + colorStep > 255) {
         currentDirection[1] = -1
     }
 
     
-    if (currentColor[1] - colorStep < 0) {
-        currentDirection[1] = 1
-    }
     if (currentColor[0] - colorStep < 0) {
+        currentDirection[0] = 1
+    }
+    if (currentColor[1] - colorStep < 0) {
         currentDirection[1] = 1
     }
 }
 
+// Do a step
 function step() {
     updatePoints()
     colorPoints()
 }
 
+// Iterate many steps
 function iterate(times=0) {
+    if (points === undefined) {
+        alert('Loading...')
+        return
+    }
+
     if (times <= 0) {
         console.log('Done!')
         return
@@ -229,3 +240,5 @@ function iterate(times=0) {
         iterate(times - 1)
     }, animDelay)
 }
+
+start()
