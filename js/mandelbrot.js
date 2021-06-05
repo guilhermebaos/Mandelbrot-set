@@ -156,12 +156,19 @@ function drawAxis(width, height, deltaX, deltaY) {
 
 // Select every point on the grid
 let points, scale, translateX, translateY
+let queue = 0
 function start() {
+    // Restart the iterations queue
+    queue = 0
+
+    // Get the canvas' properties
     let width = canvas.width
     let height = canvas.height
     
+    // Clear the canvas
     ctx.clearRect(0, 0, width, height)
 
+    // Window settings
     let zoom = (sliderScale.value * 1)
     
     scale = initialScale / zoom
@@ -171,8 +178,10 @@ function start() {
     let deltaX = width / 2 + translateX
     let deltaY = height / 2 + translateY
 
+    // Draw the complex plane axis
     drawAxis(width, height, deltaX, deltaY)
 
+    // Get all points in the canvas
     let allPoints = []
     for (let x=0; x < width; x++) {
         for (let y=0; y < height; y++) {
@@ -202,14 +211,17 @@ function updatePoints() {
 let currentColor = [0, 0]
 let currentDirection = [1, 1]
 function colorPoints() {
+    // Current color
     color = `rgb(${currentColor[0]}, ${currentColor[1]}, 255)`
 
+    // Color the points who escaped right now
     ctx.fillStyle = color
     for (let p in escapePoints) {
         let point = escapePoints[p]
         ctx.fillRect(point.canvas.re, point.canvas.im, 1, 1)
     }
 
+    // Update the color
     currentColor[0] += colorStep * currentDirection[0]
     currentColor[1] += Math.ceil(colorStep * Math.PI / 4) * currentDirection[1]
 
@@ -239,19 +251,21 @@ function step() {
 
 // Iterate many steps
 function iterate(times=0) {
+    queue += times
+
     if (points === undefined) {
         alert('Loading...')
         return
     }
 
-    if (times <= 0) {
-        console.log('Done!')
+    if (queue <= 0) {
         return
     }
+    queue -= 1
 
     step()
     setTimeout(() => {
-        iterate(times - 1)
+        iterate()
     }, animDelay)
 }
 
