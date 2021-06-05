@@ -1,9 +1,9 @@
 // Parameters
 const threshold = 2     // Limit above which we assume the point diverges
-const scale = 0.01      // Multiply every points' coordinates by the scale factor
+const scale = 0.0075    // Multiply every points' coordinates by the scale factor
 
-const translateX = -60
-const translateY = 50
+const translateX = -70
+const translateY = 70
 
 const animDelay = 0.25  // Animation delay for multiple iterations
 const allColors = [
