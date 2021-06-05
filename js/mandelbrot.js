@@ -1,19 +1,14 @@
 // Parameters
 const threshold = 2     // Limit above which we assume the point diverges
-const scale = 0.0075    // Multiply every points' coordinates by the scale factor
 
+// Window size
+const scale = 0.0075    // Multiply every points' coordinates by the scale factor
 const translateX = -70
 const translateY = 70
 
+// Animation and color
 const animDelay = 0.25  // Animation delay for multiple iterations
-const allColors = [
-    '#0000ff',
-    '#00ff00',
-    '#ff0000',
-    '#ffff00',
-    '#ff00ff',
-    '#00ffff',
-]
+const colorStep = 8    // Speed at which the color changes
 
 
 // Get the Device Pixel Ratio
@@ -141,9 +136,10 @@ function drawArrow(x0, y0, xFinal, yFinal, color) {
 function drawAxis(width, height, deltaX, deltaY) {
     let arrowHeadOffset = 20
 
-    drawArrow(deltaX, height, deltaX, 0 + arrowHeadOffset, '#ffffff')
-    drawArrow(0, deltaY, width - 160, deltaY, '#ffffff')
+    drawArrow(deltaX, height, deltaX, 0 + arrowHeadOffset, '#000000')
+    drawArrow(0, deltaY, width - 160, deltaY, '#000000')
 
+    ctx.fillStyle = '#fafafa'
     ctx.fillText('Imaginary Axis', deltaX + 10, 5 + arrowHeadOffset)
     ctx.fillText('Real Axis', width - 210, deltaY + 15)
 }
@@ -185,9 +181,10 @@ function updatePoints() {
     }
 }
 
-let currentColor = 0
+let currentColor = [0, 0]
+let currentDirection = [1, 1]
 function colorPoints() {
-    color = allColors[currentColor]
+    color = `rgb(${currentColor[0]}, ${currentColor[1]}, 256)`
 
     ctx.fillStyle = color
     for (let p in escapePoints) {
@@ -195,8 +192,25 @@ function colorPoints() {
         ctx.fillRect(point.canvas.re, point.canvas.im, 1, 1)
     }
 
-    currentColor++
-    currentColor %= allColors.length
+    currentColor[1] += colorStep * currentDirection[0]
+    currentColor[0] += Math.ceil(colorStep * Math.PI / 4) * currentDirection[1]
+
+
+    // Switch the direction in which we add color
+    if (currentColor[1] + colorStep > 255) {
+        currentDirection[1] = -1
+    }
+    if (currentColor[0] + colorStep > 255) {
+        currentDirection[1] = -1
+    }
+
+    
+    if (currentColor[1] - colorStep < 0) {
+        currentDirection[1] = 1
+    }
+    if (currentColor[0] - colorStep < 0) {
+        currentDirection[1] = 1
+    }
 }
 
 function step() {
