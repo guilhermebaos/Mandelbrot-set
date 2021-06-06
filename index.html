@@ -11,6 +11,22 @@
 </head>
 <body>
     <h1>Mandelbrot Set</h1>
+
+    <p>Click on a point on the complex plane to zoom in on it!</p>
+    <button onclick="zoomOut()">Click here to Zoom Out!</button>
+
+    <div class="canvas-overflow">
+        <div class="canvas-container">
+            <canvas id="mandelbrot-canvas" width="700" height="700"></canvas>
+        </div>
+    </div>
+
+    <h2>Zoom In Speed:</h2>
+    <label for="zoomInSpeed">Zoom In Speed: </label><input type="number" name="zoomInSpeed" id="zoomInSpeed" value="10"><br>
+
+
+    <h2>Manual Controls:</h2>
+    <p>Write the translation vector and the zoom, then Restart, then iterate!</p>
     <label for="transX">Translate in X direction: </label><input type="number" name="transX" id="transX" value="0"><br>
     <label for="transX">Translate in Y direction: </label><input type="number" name="transY" id="transY" value="0"><br><br>
     <label for="transX">Zoom: </label><input type="number" name="zoom" id="zoom" value="1"><br>
@@ -22,10 +38,6 @@
     <button onclick="iterate(100)">Do 100 Iterations</button>
     <button onclick="iterate(1000)">Do 1000 Iterations</button>
 
-    <div class="canvas-overflow">
-        <div class="canvas-container">
-            <canvas id="mandelbrot-canvas" width="700" height="700"></canvas>
-        </div>
-    </div>
+    <p class="made-by">Made by <a href="https://github.com/guilhermebaos" target="_blank" rel="external">Guilherme Baos</a></p>
 </body>
 </html>

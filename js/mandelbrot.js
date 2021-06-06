@@ -15,14 +15,42 @@ const colorStep = 2         // Speed at which the color changes (at least 1)
 // Get the canvas
 const canvas = document.getElementById('mandelbrot-canvas')
 
+// Get the canvas' properties
+const canvasWidth = canvas.width
+const canvasHeight = canvas.height
+
 // Get the canvas context
 const ctx = canvas.getContext('2d')
 
 
 // Select the sliders
+const zoomInSpeed = document.getElementById('zoomInSpeed')
+
 const sliderTransX = document.getElementById('transX')
 const sliderTransY = document.getElementById('transY')
 const sliderScale = document.getElementById('zoom')
+
+
+
+// ZOOM IN AND OUT
+function zoomOnPoint(canvas, event) {
+    let rect = canvas.getBoundingClientRect();
+    let x = event.clientX - rect.left,
+        y = event.clientY - rect.top
+    sliderTransX.value = sliderTransX.value * 1 + (canvasWidth / 2 - x) / (sliderScale.value * 1)
+    sliderTransY.value = sliderTransY.value * 1 + (canvasHeight / 2 - y) / (sliderScale.value * 1)
+    sliderScale.value *= (zoomInSpeed.value *1)
+    start()
+    iterate(100)
+}
+  
+canvas.addEventListener("mousedown", (event) => { zoomOnPoint(canvas, event) });
+
+function zoomOut() {
+    sliderScale.value /= (zoomInSpeed.value *1)
+    start()
+    iterate(100)
+}
 
 
 
@@ -142,19 +170,19 @@ function drawArrow(x0, y0, xFinal, yFinal, color) {
 
 
 // Draw the real and imaginary axis
-function drawAxis(width, height, deltaX, deltaY) {
+function drawAxis(canvasWidth, canvasHeight, deltaX, deltaY) {
     let arrowHeadOffset = 20
 
     // Real Axis
-    drawArrow(0, deltaY, width - arrowHeadOffset, deltaY, '#000000')
+    drawArrow(0, deltaY, canvasWidth - arrowHeadOffset, deltaY, '#000000')
 
     // Imaginary Axis
-    drawArrow(deltaX, height, deltaX, 0 + arrowHeadOffset, '#000000')
+    drawArrow(deltaX, canvasHeight, deltaX, 0 + arrowHeadOffset, '#000000')
 
     ctx.fillStyle = '#fafafa'
     ctx.font = '20px serif'
     ctx.fillText('Imaginary Axis', deltaX + arrowHeadOffset, arrowHeadOffset)
-    ctx.fillText('Real Axis', width - 5 * arrowHeadOffset, deltaY + arrowHeadOffset)
+    ctx.fillText('Real Axis', canvasWidth - 5 * arrowHeadOffset, deltaY + arrowHeadOffset)
 }
 
 
@@ -167,13 +195,9 @@ let queue = 0
 function start() {
     // Restart the iterations queue
     queue = 0
-
-    // Get the canvas' properties
-    let width = canvas.width
-    let height = canvas.height
     
     // Clear the canvas
-    ctx.clearRect(0, 0, width, height)
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
 
     // Window settings
     let zoom = (sliderScale.value * 1)
@@ -182,16 +206,16 @@ function start() {
     translateX = (sliderTransX.value * 1) * zoom
     translateY = (sliderTransY.value * 1) * zoom
 
-    let deltaX = width / 2 + translateX
-    let deltaY = height / 2 + translateY
+    let deltaX = canvasWidth / 2 + translateX
+    let deltaY = canvasHeight / 2 + translateY
 
     // Draw the complex plane axis
-    drawAxis(width, height, deltaX, deltaY)
+    drawAxis(canvasWidth, canvasHeight, deltaX, deltaY)
 
     // Get all points in the canvas
     let allPoints = []
-    for (let x=0; x < width; x++) {
-        for (let y=0; y < height; y++) {
+    for (let x=0; x < canvasWidth; x++) {
+        for (let y=0; y < canvasHeight; y++) {
             allPoints.push(new ComplexPoint(x, y, deltaX, deltaY))
         }
     }
@@ -230,8 +254,6 @@ let currentDirection = [1, 1, -1]
 function colorPoints() {
     // Current color
     color = `rgb(${currentColor[0]}, ${currentColor[1]}, ${currentColor[2]})`
-
-    console.log(color)
 
     // Color the points who escaped right now
     ctx.fillStyle = color
@@ -279,3 +301,6 @@ function iterate(times=0) {
 }
 
 start()
+setTimeout(() => {
+    iterate(100)
+}, 2000)
