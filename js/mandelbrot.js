@@ -1,13 +1,16 @@
-// Parameters
-const threshold = 2     // Limit above which we assume the point diverges
+// PARAMETERS ---------
+const threshold = 2         // Limit above which we assume the point diverges
 
 // Window size
-const initialScale = 0.006    // Multiply every points' coordinates by the scale factor
+const initialScale = 0.006  // Multiply every points' coordinates by the scale factor
 
 // Animation and color
-const animDelay = 1  // Animation delay for multiple iterations
-const colorStep = 6     // Speed at which the color changes
+const animDelay = 1         // Animation delay for multiple iterations
+const colorStep = 2         // Speed at which the color changes (at least 1)
 
+
+
+// HTML CONSTANTS ---------
 
 // Get the canvas
 const canvas = document.getElementById('mandelbrot-canvas')
@@ -21,6 +24,9 @@ const sliderTransX = document.getElementById('transX')
 const sliderTransY = document.getElementById('transY')
 const sliderScale = document.getElementById('zoom')
 
+
+
+// COMPLEX NUMBERS ---------
 
 // Define a complex number
 class ComplexNumber {
@@ -77,6 +83,9 @@ class ComplexPoint {
     }
 }
 
+
+
+// DRAWING THE AXIS ---------
 
 // Draw an arrow
 function drawArrow(x0, y0, xFinal, yFinal, color) {
@@ -150,6 +159,8 @@ function drawAxis(width, height, deltaX, deltaY) {
 
 
 
+// CALCULATE AND COLOR POINTS IN THE MANDELBROT SET ---------
+
 // Select every point on the grid
 let points, scale, translateX, translateY
 let queue = 0
@@ -203,12 +214,24 @@ function updatePoints() {
     }
 }
 
+
+// See if a color is above or below the maximum
+function aboveOrBelow(num, dir=1, min=25, max=255) {
+    if (num < min) return 1
+    else if (num > max) return -1
+
+    return dir
+}
+
 // Color the points according to the parameters and how fast they diverge
-let currentColor = [0, 0]
-let currentDirection = [1, 1]
+let currentColor = [0, 0, 255]
+let currentStep = [colorStep + 2, colorStep + 1, colorStep + 0]
+let currentDirection = [1, 1, -1]
 function colorPoints() {
     // Current color
-    color = `rgb(${currentColor[0]}, ${currentColor[1]}, 255)`
+    color = `rgb(${currentColor[0]}, ${currentColor[1]}, ${currentColor[2]})`
+
+    console.log(color)
 
     // Color the points who escaped right now
     ctx.fillStyle = color
@@ -218,25 +241,15 @@ function colorPoints() {
     }
 
     // Update the color
-    currentColor[0] += colorStep * currentDirection[0]
-    currentColor[1] += Math.ceil(colorStep * Math.PI / 4) * currentDirection[1]
+    currentColor[0] += currentStep[0] * currentDirection[0]
+    currentColor[1] += currentStep[1] * currentDirection[1]
+    currentColor[2] += currentStep[2] * currentDirection[2]
 
 
     // Switch the direction in which we add color
-    if (currentColor[0] + colorStep > 255) {
-        currentDirection[0] = -1
-    }
-    if (currentColor[1] + colorStep > 255) {
-        currentDirection[1] = -1
-    }
-
-    
-    if (currentColor[0] - colorStep < 0) {
-        currentDirection[0] = 1
-    }
-    if (currentColor[1] - colorStep < 0) {
-        currentDirection[1] = 1
-    }
+    currentDirection[0] = aboveOrBelow(currentColor[0], currentDirection[0])
+    currentDirection[1] = aboveOrBelow(currentColor[1], currentDirection[1])
+    currentDirection[2] = aboveOrBelow(currentColor[2], currentDirection[2], 100)
 }
 
 // Do a step
