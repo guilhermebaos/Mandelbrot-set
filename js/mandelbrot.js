@@ -41,7 +41,9 @@ function zoomOnPoint(canvas, event) {
     sliderTransY.value = sliderTransY.value * 1 + (canvasHeight / 2 - y) / (sliderScale.value * 1)
     sliderScale.value *= (zoomInSpeed.value *1)
     start()
-    iterate(100)
+
+    // Iterate 100 * (1 + log100(zoom)), log10(100) = 2
+    iterate(100 * (1 + Math.log10(sliderScale.value * 1) / 2))
 }
   
 canvas.addEventListener("mousedown", (event) => { zoomOnPoint(canvas, event) });
@@ -282,7 +284,7 @@ function step() {
 
 // Iterate many steps
 function iterate(times=0) {
-    queue += times
+    queue += Math.ceil(times)
 
     if (points === undefined) {
         alert('Loading...')
@@ -290,6 +292,7 @@ function iterate(times=0) {
     }
 
     if (queue <= 0) {
+        queue = 0
         return
     }
     queue -= 1
