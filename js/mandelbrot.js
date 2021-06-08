@@ -32,6 +32,19 @@ const sliderScale = document.getElementById('zoom')
 
 
 
+// URL VARIABLES ---------
+const urlVars = new URLSearchParams(window.location.search)
+
+sliderTransX.value = urlVars.get('transX') == '' ? 0 : urlVars.get('transX')
+sliderTransY.value = urlVars.get('transY') == '' ? 0 : urlVars.get('transY')
+sliderScale.value = urlVars.get('scale') == '' ? 1 : urlVars.get('scale')
+
+function encodeLocation() {
+    window.location.search = encodeURI(`transX=${sliderTransX.value}&transY=${sliderTransY.value}&scale=${sliderScale.value}&`)
+}
+
+
+
 // COMPLEX NUMBERS ---------
 
 // Define a complex number
@@ -268,8 +281,8 @@ function zoomOnPoint(canvas, event) {
     sliderScale.value *= (zoomInSpeed.value *1)
     start()
 
-    // Iterate 100 * (1 + log100(zoom)), log10(100) = 2
-    iterate(100 * (1 + Math.log10(sliderScale.value * 1) / 2))
+    // Iterate 100 * (1 + log10000(zoom)), log10(10000) = 4
+    iterate(100 * (1 + Math.log10(sliderScale.value * 1) / 4))
 }
   
 canvas.addEventListener("mousedown", (event) => { zoomOnPoint(canvas, event) });
