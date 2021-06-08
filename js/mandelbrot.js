@@ -32,30 +32,6 @@ const sliderScale = document.getElementById('zoom')
 
 
 
-// ZOOM IN AND OUT
-function zoomOnPoint(canvas, event) {
-    let rect = canvas.getBoundingClientRect();
-    let x = event.clientX - rect.left,
-        y = event.clientY - rect.top
-    sliderTransX.value = sliderTransX.value * 1 + (canvasWidth / 2 - x) / (sliderScale.value * 1)
-    sliderTransY.value = sliderTransY.value * 1 + (canvasHeight / 2 - y) / (sliderScale.value * 1)
-    sliderScale.value *= (zoomInSpeed.value *1)
-    start()
-
-    // Iterate 100 * (1 + log100(zoom)), log10(100) = 2
-    iterate(100 * (1 + Math.log10(sliderScale.value * 1) / 2))
-}
-  
-canvas.addEventListener("mousedown", (event) => { zoomOnPoint(canvas, event) });
-
-function zoomOut() {
-    sliderScale.value /= (zoomInSpeed.value *1)
-    start()
-    iterate(100)
-}
-
-
-
 // COMPLEX NUMBERS ---------
 
 // Define a complex number
@@ -189,7 +165,7 @@ function drawAxis(canvasWidth, canvasHeight, deltaX, deltaY) {
 
 
 
-// CALCULATE AND COLOR POINTS IN THE MANDELBROT SET ---------
+// CALCULATE POINTS IN THE MANDELBROT SET ---------
 
 // Select every point on the grid
 let points, scale, translateX, translateY
@@ -241,6 +217,9 @@ function updatePoints() {
 }
 
 
+
+// COLOR THE POINTS THAT HAVE JUST ESCAPED ---------
+
 // See if a color is above or below the maximum
 function aboveOrBelow(num, dir=1, min=25, max=255) {
     if (num < min) return 1
@@ -275,6 +254,35 @@ function colorPoints() {
     currentDirection[1] = aboveOrBelow(currentColor[1], currentDirection[1])
     currentDirection[2] = aboveOrBelow(currentColor[2], currentDirection[2], 100)
 }
+
+
+
+
+// ZOOM IN AND OUT
+function zoomOnPoint(canvas, event) {
+    let rect = canvas.getBoundingClientRect();
+    let x = event.clientX - rect.left,
+        y = event.clientY - rect.top
+    sliderTransX.value = sliderTransX.value * 1 + (canvasWidth / 2 - x) / (sliderScale.value * 1)
+    sliderTransY.value = sliderTransY.value * 1 + (canvasHeight / 2 - y) / (sliderScale.value * 1)
+    sliderScale.value *= (zoomInSpeed.value *1)
+    start()
+
+    // Iterate 100 * (1 + log100(zoom)), log10(100) = 2
+    iterate(100 * (1 + Math.log10(sliderScale.value * 1) / 2))
+}
+  
+canvas.addEventListener("mousedown", (event) => { zoomOnPoint(canvas, event) });
+
+function zoomOut() {
+    sliderScale.value /= (zoomInSpeed.value *1)
+    start()
+    iterate(100)
+}
+
+
+
+// ITERATE! ---------
 
 // Do a step
 function step() {
