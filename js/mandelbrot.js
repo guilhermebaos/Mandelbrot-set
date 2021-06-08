@@ -35,9 +35,10 @@ const sliderScale = document.getElementById('zoom')
 // URL VARIABLES ---------
 const urlVars = new URLSearchParams(window.location.search)
 
-sliderTransX.value = urlVars.get('transX') == '' ? 0 : urlVars.get('transX')
-sliderTransY.value = urlVars.get('transY') == '' ? 0 : urlVars.get('transY')
-sliderScale.value = urlVars.get('scale') == '' ? 1 : urlVars.get('scale')
+// Change the values of the inputs to the values in the URL, with some error preventing
+sliderTransX.value = urlVars.get('transX') == '' ? 0 : urlVars.get('transX') ?? 0
+sliderTransY.value = urlVars.get('transY') == '' ? 0 : urlVars.get('transY') ?? 0
+sliderScale.value = urlVars.get('scale') == '' ? 1 : urlVars.get('scale') ?? 1
 
 function encodeLocation() {
     window.location.search = encodeURI(`transX=${sliderTransX.value}&transY=${sliderTransY.value}&scale=${sliderScale.value}&`)
